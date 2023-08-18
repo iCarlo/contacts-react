@@ -1,9 +1,10 @@
+import ContactListPage from "./pages/ContactListPage";
 
 
 function App() {
   return (
     <div className="container mx-auto">
-      <h1>APP</h1>
+      <ContactListPage/>
     </div>
   );
 }
