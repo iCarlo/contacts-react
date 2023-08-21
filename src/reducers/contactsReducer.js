@@ -1,23 +1,6 @@
 import { v4 as uuid4 } from 'uuid';
 
-export const contactsReducer = (contacts = [
-  {
-    id: 0,
-    firstName: 'John',
-    middleName: 'Garcia',
-    lastName: 'Doe',
-    mobileNumber: '09123456789',
-    email: 'john.doe@email.com'
-  },
-  {
-    id: 1,
-    firstName: 'Jane',
-    middleName: 'Garcia',
-    lastName: 'Doe',
-    mobileNumber: '09123456788',
-    email: 'jane.doe@email.com'
-  }
-], action) => {
+export const contactsReducer = (contacts = [], action) => {
   switch (action.type) {
     case 'ADD_CONTACT':
       const newContact = Object.assign({}, action.payload, {id: uuid4()})

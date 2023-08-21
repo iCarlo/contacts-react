@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useForm } from "react-hook-form";
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
@@ -33,6 +33,7 @@ const ContactFormModal = ({ contact = {}, openContactModal, handleOpenModal}) =>
         setValue(e[0], e[1], {shouldDirty: true}); 
       })
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [contact])
 
   const handleFormSubmit = (data) => {
@@ -98,7 +99,7 @@ const ContactFormModal = ({ contact = {}, openContactModal, handleOpenModal}) =>
           )}
 
           <label htmlFor="email">Email Address</label>
-          <input type="text" {...register("email", {required: true, pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ })} id="email" placeholder="email@domain.com" 
+          <input type="text" {...register("email", {required: true, pattern: /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/ })} id="email" placeholder="email@domain.com" 
           className="h-10 border mt-1 rounded px-4 w-full bg-gray-50
           invalid:border-pink-500 invalid:text-pink-600
           focus:invalid:border-pink-500 focus:invalid:ring-pink-500
