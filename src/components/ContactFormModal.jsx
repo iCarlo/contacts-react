@@ -22,7 +22,7 @@ const ContactFormModal = ({ contact = {}, openContactModal, handleOpenModal}) =>
 
   const dispatch = useDispatch()
 
-  const { register, handleSubmit, reset, setValue} = useForm({
+  const { register, handleSubmit, reset, setValue, formState: { errors }} = useForm({
     defaultValues: useMemo(() => contact, [contact])
   });
 
@@ -36,8 +36,9 @@ const ContactFormModal = ({ contact = {}, openContactModal, handleOpenModal}) =>
   }, [contact])
 
   const handleFormSubmit = (data) => {
+
     if(contact.id === undefined) {
-      dispatch(addContact(data));
+      dispatch(addContact(Object.assign({}, data, {"mobileNumber": data.mobileNumber.toString()})));
     } else {
       dispatch(updateContact(data));
     }
@@ -61,23 +62,54 @@ const ContactFormModal = ({ contact = {}, openContactModal, handleOpenModal}) =>
 
         <form onSubmit={handleSubmit(handleFormSubmit)}>
           <label htmlFor="firstName">First Name</label>
-          <input type="text" {...register("firstName")} id="firstName" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" />
-          
+          <input type="text" {...register("firstName", { required: true })} aria-invalid={errors.firstName ? "true" : "false"} id="firstName"  
+          className="form-input h-10 border mt-1 rounded px-4 w-full bg-gray-5 invalid:border-pink-500 invalid:text-pink-600
+        focus:invalid:border-pink-500 focus:invalid:ring-pink-500"  />
+          {errors.firstName?.type === "required" && (
+            <p role="alert" className='text-red-500'>First name is required</p>
+          )}
+
           <label htmlFor="middleName">Middle Name</label>
-          <input type="text" {...register("middleName")} id="middleName" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" />
-          
+          <input type="text" {...register("middleName", { required: true })} id="middleName" 
+          className="h-10 border mt-1 rounded px-4 w-full bg-gray-50 invalid:border-pink-500 invalid:text-pink-600
+          focus:invalid:border-pink-500 focus:invalid:ring-pink-500" />
+          {errors.middleName?.type === "required" && (
+            <p role="alert" className='text-red-500'>Middle name is required</p>
+          )}
+
           <label htmlFor="lastName">Last Name</label>
-          <input type="text" {...register("lastName")} id="lastName" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" />
-          
-          <label htmlFor="mobileNumber">Mobile Number</label>
-          <input type="text" {...register("mobileNumber")} id="mobileNumber" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" placeholder="09123456789" />
+          <input type="text" {...register("lastName", { required: true })} id="lastName" 
+          className="h-10 border mt-1 rounded px-4 w-full bg-gray-50
+          invalid:border-pink-500 invalid:text-pink-600
+          focus:invalid:border-pink-500 focus:invalid:ring-pink-500
+          " />
+          {errors.lastName?.type === "required" && (
+            <p role="alert" className='text-red-500'>Last name is required</p>
+          )}
+
+          <label htmlFor="mobileNumber">Mobile Number</label> 
+          <input type="number" {...register("mobileNumber", {required: true, minLength: 11, maxLength: 11 })} id="mobileNumber" placeholder="09123456789" 
+          className="h-10 border mt-1 rounded px-4 w-full bg-gray-50
+          invalid:border-pink-500 invalid:text-pink-600
+          focus:invalid:border-pink-500 focus:invalid:ring-pink-500
+          "  />
+          {errors.mobileNumber && (
+            <p role="alert" className='text-red-500'>{errors.mobileNumber?.type === "required" ? "Mobile Number required": "Invalid mobile number"}</p>
+          )}
 
           <label htmlFor="email">Email Address</label>
-          <input type="text" {...register("email")} id="email" className="h-10 border mt-1 rounded px-4 w-full bg-gray-50" placeholder="email@domain.com" />
+          <input type="text" {...register("email", {required: true, pattern: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ })} id="email" placeholder="email@domain.com" 
+          className="h-10 border mt-1 rounded px-4 w-full bg-gray-50
+          invalid:border-pink-500 invalid:text-pink-600
+          focus:invalid:border-pink-500 focus:invalid:ring-pink-500
+          "  />
+          {errors.email && (
+            <p role="alert" className='text-red-500'>{errors.email?.type === "required" ? "Email requied" : "Invalid email"}</p>
+          )}
         
 
           <div className="mt-6 flex justify-end">
-            <button onClick={handleOpenModal} className="bg-white  hover:bg-slate-100 text-blue-600 font-bold py-2 px-4 rounded">Cancel</button>
+            <button onClick={handleCloseModal} className="bg-white  hover:bg-slate-100 text-blue-600 font-bold py-2 px-4 rounded">Cancel</button>
             <button type='submit' className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Submit</button>
           </div>
 
